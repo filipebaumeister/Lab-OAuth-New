@@ -62,6 +62,7 @@ if (isset($_SESSION['token'])) {
 
 <head>
     <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer" />
     <title>Lab-OAuth</title>
 </head>
 
