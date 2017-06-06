@@ -1,0 +1,13 @@
+{
+    "name": "pucminas/lab-oauth",
+    "description": "Laboratório OAuth",
+    "authors": [
+        {
+            "name": "Rommel Carneiro",
+            "email": "email@servidor.dns"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^6.0"
+    }
+}
