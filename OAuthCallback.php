@@ -5,6 +5,10 @@ require "config.php";
 
 use GuzzleHttp\Client;
 
+try
+{
+    
+
 if (isset($_REQUEST['api'])) {
     // Obtem a identificação de qual API está
     // sendo utilizada (Google ou Facebook)
@@ -71,5 +75,9 @@ if (isset($_REQUEST['api'])) {
 else {  
     header ("Refresh: 5; url=/AulasWeb/Lab-OAuth/");
     echo "API não informada";
+}
+}
+catch (Exception $e) {
+    echo 'Exceção capturada: ',  $e->getMessage(), "\n";
 }
 ?>
