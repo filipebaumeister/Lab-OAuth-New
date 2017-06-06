@@ -1,7 +1,7 @@
 <?php
 // Declara a URL de callback para a qual o Servidor de Autorização 
 // deverá encaminhar o retorno com o código de autorização
-$CALLBACK_URL = "http://localhost/AulasWeb/Lab-OAuth/OAuthCallback.php";
+$CALLBACK_URL = "http://trabalhotecweb.azurewebsites.net/OAuthCallback.php";
 
 // Configuração da API do Google
 $GOOGLE_API_AUTH_URL = "https://accounts.google.com/o/oauth2/auth";
