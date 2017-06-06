@@ -1,12 +1,12 @@
 <?php
+try
+{
 session_start();
 require "vendor/autoload.php";
 require "config.php";
 
 use GuzzleHttp\Client;
 
-try
-{
     
 
 if (isset($_REQUEST['api'])) {
