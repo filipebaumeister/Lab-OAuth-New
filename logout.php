@@ -1,5 +1,5 @@
 <?php
     session_start();
     session_destroy();
-    header('Location: /AulasWeb/Lab-OAuth/');
+    header('Location: /index.php');
 ?>

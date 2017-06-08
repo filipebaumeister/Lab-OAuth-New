@@ -1,6 +1,4 @@
 <?php
-try
-{
 session_start();
 require "vendor/autoload.php";
 require "config.php";
@@ -76,8 +74,5 @@ else {
     header ("Refresh: 5; url=/index.php");
     echo "API não informada";
 }
-}
-catch (Exception $e) {
-    echo 'Exceção capturada: ',  $e->getMessage(), "\n";
-}
+
 ?>
