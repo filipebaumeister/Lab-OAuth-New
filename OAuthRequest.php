@@ -36,7 +36,7 @@ if (isset($_REQUEST['api'])) {
     header("Location: " . $url);
 }
 else {  
-    header ("Refresh: 5; url=/AulasWeb/Lab-OAuth");
+    header ("Refresh: 5; url=/index.php");
     echo "API não informada";
 }
 ?>
