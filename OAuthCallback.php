@@ -20,7 +20,7 @@ if (isset($_REQUEST['api'])) {
         $code = $_GET['code'];
     }
     else {
-        header ("Refresh: 5; url=/AulasWeb/Lab-OAuth/");
+        header ("Refresh: 5; url=/index.php");
         echo "OAuth code não informado";
         die;
     }        
@@ -69,11 +69,11 @@ if (isset($_REQUEST['api'])) {
     
     // Redireciona para a página inicial que irá obter 
     // os dados do usuário a partir do Servidor de Recursos
-    header('Location: /AulasWeb/Lab-OAuth/');
+    header('Location: /index.php');
 
 }
 else {  
-    header ("Refresh: 5; url=/AulasWeb/Lab-OAuth/");
+    header ("Refresh: 5; url=/index.php");
     echo "API não informada";
 }
 }
