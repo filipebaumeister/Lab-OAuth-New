@@ -56,7 +56,7 @@ function connectToDB() {
 
         $.ajax({
             async: false,
-            url: webserviceUrl + '/webservice/WebService1.asmx/CheckIfUserExists',
+            url: '/webservice/WebService1.asmx/CheckIfUserExists',
             contentType: "application/json",
             data: { id: JSON.stringify(response.id), nome: JSON.stringify(response.name), lstEducations: JSON.stringify(lstEducations) },
             success: getEducationSuccess,
@@ -103,7 +103,7 @@ function alterarEnsino() {
     var fim = $('#iFim').val();
 
     $.ajax({
-        url: webserviceUrl + '/webservice/WebService1.asmx/AlterarEnsino',
+        url: '/webservice/WebService1.asmx/AlterarEnsino',
         contentType: "application/json",
         data: {
             id: JSON.stringify(id),
