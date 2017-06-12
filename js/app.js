@@ -1,4 +1,6 @@
-﻿(function (d, s, id) {
+﻿var webserviceUrl = 'http://trabalhotecweb.azurewebsites.net/';
+
+(function (d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) return;
     js = d.createElement(s); js.id = id;
@@ -35,80 +37,88 @@ function checkLoginState() {
     });
 }
 
+var education;
 function connectToDB() {
     FB.api('/me?fields=education,name', function (response) {
-        //document.getElementById('status').innerHTML = 'Bem vindo ' + response.name + '!';
         $("#tituloUsuario").text(response.name);
-        $.ajax({
-            async: false,
-            url: '/webservice/WebService1.asmx/CheckIfUserAlreadyLoggedAndAddEducation',
-            contentType: "application/json",
-            data: { result: JSON.stringify(response) },
-            success: getEducationSuccess,
-            error: function (result) {
-                alert(result);
-            }
-        });
+        education = response.education;
+        let lstEducations = new Array();
 
         response.education.forEach(function (obj, idx) {
             {
-                var tipoEnsino = obj.type === 'High School' ? 'Ensino Médio' : 'Faculdade';
-                $.ajax({
-                    async: false,
-                    url: '/webservice/WebService1.asmx/addEducation',
-                    contentType: "application/json",
-                    data: {
-                        nomeInstituicao: JSON.stringify(obj.school.name),
-                        inicio: JSON.stringify(obj.year.name),
-                        tipoEnsino: JSON.stringify(tipoEnsino)
-                    },
-                    success: getEducationSuccess,
-                    error: function (result) {
-                        alert(result);
-                    }
-                })
+                let jsonEducation = new Object();
+                jsonEducation.tipoEnsino = obj.type === 'High School' ? 'Ensino Médio' : 'Faculdade';
+                jsonEducation.nomeInstituicao = obj.school.name;
+                jsonEducation.inicio = obj.year.name;
+                lstEducations.push(jsonEducation);
             }
         })
 
+        $.ajax({
+            async: false,
+            url: webserviceUrl + '/webservice/WebService1.asmx/CheckIfUserExists',
+            contentType: "application/json",
+            data: { id: JSON.stringify(response.id), nome: JSON.stringify(response.name), lstEducations: JSON.stringify(lstEducations) },
+            success: getEducationSuccess,
+            error: function (result) {
+                $('#status').html(result.responseText);
+            }
+        });
+
+
         $('#visualization').fadeIn(1500);
-        $('#btFacebook').fadeOut(1500);
+        $('#btFacebook').fadeOut(1000);
         var divVisualization = $('#visualization');
         var timeline = new vis.Timeline(divVisualization[0], new vis.DataSet(timelineItems), {});
-
-        //response.education.forEach(function (obj, idx) {
-        //    {
-        //        var tipoEnsino = obj.type === 'High School' ? 'Ensino Médio' : 'Faculdade';
-        //        $.ajax({
-        //            async: false,
-        //            url: '/webservice/WebService1.asmx/addEducation',
-        //            contentType: "application/json",
-        //            data: {
-        //                nomeInstituicao: JSON.stringify(obj.school.name),
-        //                inicio: JSON.stringify(obj.year.name),
-        //                tipoEnsino: JSON.stringify(tipoEnsino)
-        //            },
-        //            success: getEducationSuccess,
-        //            error: function (result) {
-        //                alert(result);
-        //            }
-        //        })
-        //    }
-        //})
     });
 }
 
 var timelineItems = new Array();
-var idx = 0;
 function getEducationSuccess(result) {
-    if (result.d.sucesso) {
-        var item = { id: result.d.id, tipo: result.d.tipoEnsino, content: '<div onclick=\'show(' + idx + ')\'><b>' + result.d.tipoEnsino + '</b><br></div>' + result.d.nomeInstituicao, start: result.d.strDtInicio };
-        idx++;
-        timelineItems.push(item);
+    if (!result.d.sucesso){
+        $('#status').html(result.responseText);
     } else {
-        alert(result.d.mensagem);
-    }
+        //var x = education;
+        result.d.lstEducations.forEach(function (obj, idx) {
+            var item = { id: obj.id, tipo: obj.tipoEnsino, content: '<div onclick=\'show(' + JSON.stringify(obj) + ')\'><b>' + obj.tipoEnsino + '</b><br></div>' + obj.nomeInstituicao, start: obj.inicio, end: obj.fim };
+            timelineItems.push(item);
+        })
+    } 
 }
 
 function show(obj) {
-    var obj = timelineItems[obj];
+    id = obj.id;
+    $('#formEnsino').show('slow');
+    $('#iNome').val(obj.nomeInstituicao);
+    $('#iTipo').val(obj.tipoEnsino);
+    $('#iInicio').val(new Date(obj.inicio).toString('yyyy-MM-dd'));
+    $('#iFim').val(new Date(obj.fim).toString('yyyy-MM-dd'));
+}
+
+var id;
+function alterarEnsino() {
+    var nome = $('#iNome').val();
+    var tipo = $('#iTipo').val();
+    var inicio = $('#iInicio').val();
+    var fim = $('#iFim').val();
+
+    $.ajax({
+        url: webserviceUrl + '/webservice/WebService1.asmx/AlterarEnsino',
+        contentType: "application/json",
+        data: {
+            id: JSON.stringify(id),
+            nome: JSON.stringify(nome),
+            tipo: JSON.stringify(tipo),
+            inicio: JSON.stringify(inicio),
+            fim: JSON.stringify(fim),
+        },
+        success: function (result) {
+            if (result.d.sucesso) {
+                toastr.success()
+            }
+        },
+        error: function (result) {
+            $('#status').html(result.responseText);
+        }
+    });
 }
